@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.mobile.lucidity.lucidity.SettingsActivity">
+
+    <LinearLayout
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <Button
+        android:id="@+id/upload_test_material"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test Material" />
+
+    <Button
+        android:id="@+id/MH"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Medical History \n Demographics" />
+
+    <Button
+        android:id="@+id/wearable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Link device" />
+
+    <Button
+        android:id="@+id/External"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="External information" />
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
