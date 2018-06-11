@@ -26,7 +26,7 @@ public class RegisterActivity extends AppCompatActivity {
     JSONParser jsonParser = new JSONParser();
 
     // url to add a user
-    private static String url_add_user = "http://ec2-54-84-171-242.compute-1.amazonaws.com/lucidity/add_user.php";
+    private static String url_add_user = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/add_user.php";
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
