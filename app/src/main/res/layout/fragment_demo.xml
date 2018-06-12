@@ -28,12 +28,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Age"
+            android:hint="dd/mm/yyyy"
             android:inputType="date" />
 
-            <TableRow
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
             <RadioButton
                 android:id="@+id/sex_male"
                 android:layout_width="wrap_content"
@@ -51,25 +52,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Other" />
-            </TableRow>
+        </TableRow>
 
         <Spinner
             android:id="@+id/education"
             style="@android:style/Widget.Holo.Light.Spinner"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
         <Spinner
             android:id="@+id/ethnicity"
             style="@android:style/Widget.Holo.Light.Spinner"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
         <Spinner
             android:id="@+id/marital"
             style="@android:style/Widget.Holo.Light.Spinner"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
 
     </LinearLayout>
