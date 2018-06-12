@@ -1,14 +1,35 @@
 package com.mobile.lucidity.lucidity;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RegisterActivity extends AppCompatActivity {
 
+    // Progress Dialog
+    private ProgressDialog pDialog;
+
+    JSONParser jsonParser = new JSONParser();
+
+    // url to add a user
+    private static String url_add_user = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/add_user.php";
+
+    // JSON Node names
+    private static final String TAG_SUCCESS = "success";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,9 +42,8 @@ public class RegisterActivity extends AppCompatActivity {
                 // Code here executes on main thread after user presses button
                 boolean valid = validEntry();
                 if(valid){
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(intent);
-                    //TODO: Store the information in the database
+                    // Adding new user in background thread
+                    new AddNewUser().execute();
                 }
             }
         });
@@ -83,5 +103,74 @@ public class RegisterActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Background Async Task to Add new User
+     * */
+    class AddNewUser extends AsyncTask<String, String, String> {
 
+        /**
+         * Before starting background thread Show Progress Dialog
+         * */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(RegisterActivity.this);
+            pDialog.setMessage("Adding User..");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();
+        }
+
+        /**
+         * Adding User
+         * */
+        protected String doInBackground(String... args) {
+            EditText uname = (EditText)findViewById(R.id.signup_input_username);
+            EditText pword = (EditText)findViewById(R.id.signup_input_password);
+            String username = uname.getText().toString();
+            String password = pword.getText().toString();
+
+            // Building Parameters
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("username", username));
+            params.add(new BasicNameValuePair("password", password));
+
+            // getting JSON Object
+            // Note that add user url accepts POST method
+            JSONObject json = jsonParser.makeHttpRequest(url_add_user,
+                    "POST", params);
+
+            // check log cat for response
+            Log.d("Create Response", json.toString());
+
+            // check for success tag
+            try {
+                int success = json.getInt(TAG_SUCCESS);
+
+                if (success == 1) {
+                    // successfully added user
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+
+                    // closing this screen
+                    finish();
+                } else {
+                    // failed to create product
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        /**
+         * After completing background task Dismiss the progress dialog
+         * **/
+        protected void onPostExecute(String file_url) {
+            // dismiss the dialog once done
+            pDialog.dismiss();
+        }
+
+    }
 }
