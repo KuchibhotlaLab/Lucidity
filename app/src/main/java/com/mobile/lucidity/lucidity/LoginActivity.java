@@ -8,9 +8,15 @@ import com.amazonaws.mobile.client.AWSStartupHandler;
 import com.amazonaws.mobile.client.AWSStartupResult;
 import com.amazonaws.mobile.config.AWSConfiguration;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -54,6 +60,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     //For AWS
     private AWSCredentialsProvider credentialsProvider;
     private AWSConfiguration configuration;
+
+    // Progress Dialog
+    private ProgressDialog pDialog;
+
+    // JSON parser class
+    JSONParser jsonParser = new JSONParser();
+
+    // url to add a user
+    private static String url_login_user = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/login_user.php";
+
+    // JSON Node names
+    private static final String TAG_SUCCESS = "success";
+    private static final String TAG_MESSAGE = "message";
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -136,10 +155,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mUserSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-                //TODO: make sure attemptLogin is filled in with database
-                //attemptLogin();
+                new LoginUser().execute();
             }
         });
 
@@ -200,6 +216,90 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
+    /**
+     * Background Async Task to Login User
+     * */
+    class LoginUser extends AsyncTask<String, String, String> {
+
+        /**
+         * Before starting background thread Show Progress Dialog
+         * */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(LoginActivity.this);
+            pDialog.setMessage("Logging in User..");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();
+        }
+
+        /**
+         * Login
+         * */
+        protected String doInBackground(String... args) {
+            EditText uname = (EditText)findViewById(R.id.username);
+            EditText pword = (EditText)findViewById(R.id.password);
+            String username = uname.getText().toString();
+            String password = pword.getText().toString();
+
+            // Building Parameters
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("username", username));
+            params.add(new BasicNameValuePair("password", password));
+
+            // getting JSON Object
+            // Note that login user url accepts Get method
+            JSONObject json = jsonParser.makeHttpRequest(url_login_user,
+                    "GET", params);
+
+            // check log cat for response
+            Log.d("Create Response", json.toString());
+
+            // check for success tag
+            try {
+                int success = json.getInt(TAG_SUCCESS);
+                String msg = json.getString(TAG_MESSAGE);
+
+                if (success == 1) {
+                    // successfully found user and verified password
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+
+                    // closing this screen
+                    finish();
+                } else {
+                    if (msg.equals("Incorrect Password")) {
+                        setError(pword, msg);
+                    } else {
+                        setError(uname, msg);
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        /**
+         * After completing background task Dismiss the progress dialog
+         * **/
+        protected void onPostExecute(String file_url) {
+            // dismiss the dialog once done
+            pDialog.dismiss();
+        }
+
+    }
+
+    private void setError(final TextView text,final String value){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                text.setError(value);
+            }
+        });
+    }
 
     /**
      * Attempts to sign in or register the account specified by the login form.

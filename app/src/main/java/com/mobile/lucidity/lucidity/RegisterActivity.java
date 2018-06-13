@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
+    private static final String TAG_MESSAGE = "message";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,6 +148,7 @@ public class RegisterActivity extends AppCompatActivity {
             // check for success tag
             try {
                 int success = json.getInt(TAG_SUCCESS);
+                String msg = json.getString(TAG_MESSAGE);
 
                 if (success == 1) {
                     // successfully added user
@@ -155,7 +158,7 @@ public class RegisterActivity extends AppCompatActivity {
                     // closing this screen
                     finish();
                 } else {
-                    // failed to create product
+                    setError(uname, msg);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -172,5 +175,14 @@ public class RegisterActivity extends AppCompatActivity {
             pDialog.dismiss();
         }
 
+    }
+
+    private void setError(final TextView text, final String value){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                text.setError(value);
+            }
+        });
     }
 }
