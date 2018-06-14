@@ -127,15 +127,21 @@ public class RegisterActivity extends AppCompatActivity {
          * Adding User
          * */
         protected String doInBackground(String... args) {
+            EditText n = (EditText)findViewById(R.id.signup_input_name);
             EditText uname = (EditText)findViewById(R.id.signup_input_username);
             EditText pword = (EditText)findViewById(R.id.signup_input_password);
+            EditText carepwd = (EditText)findViewById(R.id.signup_input_caregiver_password);
+            String name = n.getText().toString();
             String username = uname.getText().toString();
             String password = pword.getText().toString();
+            String caregiverpassword = carepwd.getText().toString();
 
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("name", name));
             params.add(new BasicNameValuePair("username", username));
             params.add(new BasicNameValuePair("password", password));
+            params.add(new BasicNameValuePair("caregiverpassword", caregiverpassword));
 
             // getting JSON Object
             // Note that add user url accepts POST method
