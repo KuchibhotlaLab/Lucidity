@@ -23,10 +23,24 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), MedHistoryDemo.class);
                 startActivity(intent);
-                //TODO: Store the information in the database
             }
         });
 
+        Button wearable = findViewById(R.id.wearable);
+        wearable.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), AddWearableActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button test = findViewById(R.id.upload_test_material);
+        test.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), AddTestMaterialActivity.class);
+                startActivity(intent);
+            }
+        });
 
     }
 }

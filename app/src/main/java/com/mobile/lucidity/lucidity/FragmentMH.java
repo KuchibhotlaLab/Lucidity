@@ -44,8 +44,6 @@ public class FragmentMH extends Fragment{
         past_mh.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                //Toast.makeText(getActivity(), "This is my Toast message!",
-                //        Toast.LENGTH_LONG).show();
 
                 LayoutInflater layoutInflater
                         = (LayoutInflater)getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);

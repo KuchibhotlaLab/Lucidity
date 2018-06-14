@@ -28,6 +28,9 @@ public class Medications extends AppCompatActivity {
         final EditText editText = (EditText) findViewById(R.id.med_names);
         final Button addButton = (Button) findViewById(R.id.add_med);
         final ListView listView = (ListView) findViewById(R.id.listView);
+
+        //TODO: stores the list of medications should be list loaded from database
+        //TODO: listItems is the arraylist you want to store
         final ArrayList listItems = new ArrayList<String>();
         final ArrayAdapter adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, listItems);
@@ -36,6 +39,8 @@ public class Medications extends AppCompatActivity {
 
             public void onClick(View v) {
                 listItems.add(editText.getText().toString());
+                editText.setText("");
+
                 adapter.notifyDataSetChanged();
             }
         });
@@ -45,18 +50,21 @@ public class Medications extends AppCompatActivity {
                                     long id) {
 
                 //TODO: display the medications to delete
-                String itemValue = (String) listView.getItemAtPosition(position);
-                String values=((TextView)v).getText().toString();
-
-                Toast.makeText(Medications.this, values, Toast.LENGTH_LONG).show();
-
-                /*final TextView textViewToChange = (TextView) findViewById(R.id.med_to_delete);
-                textViewToChange.setText(values);
+                final String itemValue = (String) listView.getItemAtPosition(position);
+                final String value=((TextView)v).getText().toString();
 
 
                 LayoutInflater layoutInflater
                         = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                 View popupView = layoutInflater.inflate(R.layout.delete_dialog, null);
+
+
+                //gets the string/medication that user clicked on
+                //TODO: display the string in the popupview
+                final TextView textViewToChange = (TextView) popupView.findViewById(R.id.med_to_delete);
+                textViewToChange.setText(value);
+
+                //inflate the delte dialoge
                 final PopupWindow popupWindow = new PopupWindow(
                         popupView,
                         ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -64,6 +72,7 @@ public class Medications extends AppCompatActivity {
 
                 popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
 
+                //when the cancel button is pressed, do nothing
                 Button btnDismiss = (Button)popupView.findViewById(R.id.cancel);
                 btnDismiss.setOnClickListener(new Button.OnClickListener(){
 
@@ -72,14 +81,17 @@ public class Medications extends AppCompatActivity {
                         popupWindow.dismiss();
                     }});
 
+
+                //when the delete button is pressed, remove medication
                 Button btnSave = (Button)popupView.findViewById(R.id.delete);
                 btnSave.setOnClickListener(new Button.OnClickListener(){
 
                     @Override
                     public void onClick(View v) {
                         // TODO: save the MH information
+                        adapter.remove(itemValue);
                         popupWindow.dismiss();
-                    }});*/
+                    }});
             }
         });
     }

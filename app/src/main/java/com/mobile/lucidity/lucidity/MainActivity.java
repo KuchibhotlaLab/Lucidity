@@ -33,14 +33,6 @@ public class MainActivity extends AppCompatActivity {
         Button caregiver = findViewById(R.id.caregiver);
         caregiver.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Code here executes on main thread after user presses button
-
-                //PasswordDialog alert = new PasswordDialog(MainActivity.this);
-                //alert.show();
-
-                //Intent intent = new Intent(getApplicationContext(), CaregiverHomePage.class);
-                //startActivity(intent);
-
                 showDialog();
 
             }
@@ -67,23 +59,6 @@ public class MainActivity extends AppCompatActivity {
 
         final EditText userInput = (EditText) promptsView
                 .findViewById(R.id.caregiver_password);
-
-        /*final Button btnSubmit = (Button) promptsView.findViewById(R.id.submit);
-
-        final Button btnCancel = (Button) promptsView.findViewById(R.id.cancel);
-
-        AlertDialog alertDialog = alertDialogBuilder.create();
-
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-            }
-        });
-
-        btnCancel.setOnClickListener(new  View.OnClickListener() {
-            public void onClick(View v) {
-            }
-        });*/
 
         // set dialog message
         alertDialogBuilder
