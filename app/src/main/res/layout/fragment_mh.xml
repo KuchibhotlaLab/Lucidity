@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorWhite"
-            android:text="Current Medical History" />
+            android:text="Current Medications" />
         <Button
             android:id="@+id/past_mh"
             android:layout_marginTop="20dp"

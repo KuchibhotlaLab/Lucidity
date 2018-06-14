@@ -7,61 +7,63 @@
     tools:context="com.mobile.lucidity.lucidity.MainActivity">
 
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="473dp"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingTop="100dp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="19dp">
-
-        <FrameLayout
+        android:layout_height="match_parent">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="30dp">
+            android:layout_height="473dp"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="19dp">
 
-            <Button
-                android:id="@+id/main"
-                android:layout_width="150dp"
-                android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:background="#ca0068"
-                android:text="Main page"
-                android:textColor="#fff" />
-        </FrameLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="30dp">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="30dp">
+                <Button
+                    android:id="@+id/main"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:background="#ca0068"
+                    android:text="Main page"
+                    android:textColor="#fff" />
+            </FrameLayout>
 
-            <Button
-                android:id="@+id/lucid"
-                android:layout_width="150dp"
-                android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:background="#ca0068"
-                android:text="I feel good"
-                android:textColor="#fff" />
-        </FrameLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="30dp">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="30dp">
+                <Button
+                    android:id="@+id/lucid"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:background="#ca0068"
+                    android:text="I feel good"
+                    android:textColor="#fff" />
+            </FrameLayout>
 
-            <Button
-                android:id="@+id/caregiver"
-                android:layout_width="150dp"
-                android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:background="#ca0068"
-                android:text="I'm a caregiver"
-                android:textColor="#fff" />
-        </FrameLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="30dp">
 
-    </LinearLayout>
+                <Button
+                    android:id="@+id/caregiver"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:background="#ca0068"
+                    android:text="I'm a caregiver"
+                    android:textColor="#fff" />
+            </FrameLayout>
+        </LinearLayout>
+    </ScrollView>
 </android.support.constraint.ConstraintLayout>
