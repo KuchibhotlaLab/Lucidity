@@ -172,8 +172,6 @@ public class LoginActivity extends AppCompatActivity {
 
                     startActivity(intent);
 
-                    // closing this screen
-                    finish();
                 } else {
                     if (msg.equals("Incorrect Password")) {
                         setError(pword, msg);
