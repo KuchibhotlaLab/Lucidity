@@ -264,6 +264,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 if (success == 1) {
                     // successfully found user and verified password
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+
+                    //Pass username through to other activities
+                    intent.putExtra("username", username);
+
                     startActivity(intent);
 
                     // closing this screen

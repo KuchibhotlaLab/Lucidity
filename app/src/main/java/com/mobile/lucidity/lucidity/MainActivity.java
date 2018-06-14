@@ -15,11 +15,20 @@ import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
 
+    //Stores the username of the user
+    private String username;
+
     final Context context = this;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Gets the username passed from previous activity
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            username = extras.getString("username");
+        }
 
         Button caregiver = findViewById(R.id.caregiver);
         caregiver.setOnClickListener(new View.OnClickListener() {

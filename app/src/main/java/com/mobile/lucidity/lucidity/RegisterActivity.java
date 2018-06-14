@@ -153,6 +153,10 @@ public class RegisterActivity extends AppCompatActivity {
                 if (success == 1) {
                     // successfully added user
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+
+                    //Pass username through to other activities
+                    intent.putExtra("username", username);
+
                     startActivity(intent);
 
                     // closing this screen
