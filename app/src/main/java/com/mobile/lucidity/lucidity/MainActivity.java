@@ -29,14 +29,22 @@ public class MainActivity extends AppCompatActivity {
     //Stores the username of the user
     private String username;
 
+    //Stores the name of the user
+    private String name;
+
+    TextView nameDisplay;
+
     // JSON parser class
     JSONParser jsonParser = new JSONParser();
 
     // Progress Dialog
     private ProgressDialog pDialog;
 
-    // url to add a user
+    // url to check caregiver password
     private static String url_verify_carepass = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/verify_carepass.php";
+
+    // url to add a user
+    private static String url_get_name = "http://ec2-174-129-156-45.compute-1.amazonaws.com/lucidity/get_name.php";
 
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
@@ -53,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
         if (extras != null) {
             username = extras.getString("username");
         }
+
+        new GetName().execute();
 
         Button caregiver = findViewById(R.id.caregiver);
         caregiver.setOnClickListener(new View.OnClickListener() {
@@ -136,6 +146,68 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Background Async Task to Get complete product details
+     * */
+    class GetName extends AsyncTask<String, String, String> {
+
+        /**
+         * Before starting background thread Show Progress Dialog
+         * */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(MainActivity.this);
+            pDialog.setMessage("Getting name. Please wait...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(true);
+            pDialog.show();
+        }
+
+        /**
+         * Getting product details in background thread
+         * */
+        protected String doInBackground(String... args) {
+
+            // Check for success tag
+            int success;
+            try {
+                // Building Parameters
+                List<NameValuePair> params = new ArrayList<NameValuePair>();
+                params.add(new BasicNameValuePair("username", username));
+
+                // getting product details by making HTTP request
+                // Note that product details url will use GET request
+                JSONObject json = jsonParser.makeHttpRequest(
+                        url_get_name, "GET", params);
+
+                // check your log for json response
+                Log.d("get name", json.toString());
+
+                // json success tag
+                success = json.getInt(TAG_SUCCESS);
+                if (success == 1) {
+                    //save name in variable
+                    name = json.getString("name");
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        /**
+         * After completing background task Dismiss the progress dialog
+         * **/
+        protected void onPostExecute(String file_url) {
+            // dismiss the dialog once got all details
+            pDialog.dismiss();
+            // display name at top of page
+            nameDisplay = (TextView) findViewById(R.id.name_display);
+            nameDisplay.setText("Hi " + name);
+        }
+    }
+
+    /**
      * Background Async Task to Login User
      * */
     class VerifyCaregiver extends AsyncTask<String, String, String> {
@@ -173,7 +245,6 @@ public class MainActivity extends AppCompatActivity {
             params.add(new BasicNameValuePair("caregiverpassword", inputText));
 
             // getting JSON Object
-            // Note that login user url accepts Get method
             JSONObject json = jsonParser.makeHttpRequest(url_verify_carepass,
                     "GET", params);
 
