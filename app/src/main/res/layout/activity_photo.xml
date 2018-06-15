@@ -7,7 +7,7 @@
     tools:context="com.mobile.lucidity.lucidity.PhotoActivity">
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/loadimage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
@@ -47,6 +47,7 @@
         android:stretchMode="columnWidth"
         android:verticalSpacing="2dp"/>
     <ImageView
+        android:id="@+id/targetimage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
