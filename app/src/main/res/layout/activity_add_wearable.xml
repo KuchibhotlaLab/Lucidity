@@ -7,8 +7,9 @@
     tools:context="com.mobile.lucidity.lucidity.AddWearableActivity">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
@@ -27,7 +28,7 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <!--<LinearLayout
         android:id="@+id/lnr_wearable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -35,5 +36,12 @@
             android:id="@+id/btn_wearable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-    </LinearLayout>
+    </LinearLayout>-->
+
+    <TableLayout
+        android:id="@+id/tb_wearable"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+    </TableLayout>
 </android.support.constraint.ConstraintLayout>
