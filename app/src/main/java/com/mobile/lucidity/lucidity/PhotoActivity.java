@@ -32,9 +32,11 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,7 +47,9 @@ public class PhotoActivity extends AppCompatActivity {
 
 
     private static int RESULT_LOAD_IMAGE = 1;
+    private Bitmap bmp = null;
     ImageView targetImage;
+    //reference: stackoverflow.com/questions/13023788
 
 
     @Override
@@ -53,9 +57,18 @@ public class PhotoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo);
 
-        FloatingActionButton loadImg = findViewById(R.id.loadimage);
+
         targetImage = (ImageView)findViewById(R.id.targetimage);
 
+        //call intent to get image from gallery
+        Intent i = new Intent(
+                Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+        startActivityForResult(i, RESULT_LOAD_IMAGE);
+
+
+        /*FloatingActionButton loadImg = findViewById(R.id.loadimage);
         loadImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,6 +79,25 @@ public class PhotoActivity extends AppCompatActivity {
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
                 startActivityForResult(i, RESULT_LOAD_IMAGE);
+            }
+        });*/
+
+
+        Button btn_confirm = findViewById(R.id.btn_to_gallery);
+        btn_confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
+                startActivity(intent);
+
+
+                //Convert to byte array
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] byteArray = stream.toByteArray();
+
+                Intent in1 = new Intent(PhotoActivity.this, GalleryActivity.class);
+                in1.putExtra("image",byteArray);
             }
         });
 
@@ -87,8 +119,6 @@ public class PhotoActivity extends AppCompatActivity {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
-
-            Bitmap bmp = null;
 
             try {
                 //this is the single image gotten from gallery

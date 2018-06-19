@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.mobile.lucidity.lucidity.PhotoActivity">
 
-    <android.support.design.widget.FloatingActionButton
+    <!--<android.support.design.widget.FloatingActionButton
         android:id="@+id/loadimage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,40 +15,36 @@
         app:srcCompat="@android:drawable/ic_menu_add"
         app:layout_editor_absoluteX="350dp"/>
 
-    <!--<android.support.v7.widget.RecyclerView
-        android:id="@+id/photoGalary"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-       <GridView
-            android:id="@+id/photoGalary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:columnWidth="280dp"
-            android:gravity="center"
-            android:horizontalSpacing="2dp"
-            android:numColumns="2"
-            android:padding="2dp"
-            android:stretchMode="columnWidth"
-            android:verticalSpacing="2dp">
+    <android.support.v7.widget.RecyclerView
+       android:id="@+id/photoGalary"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+      <GridView
+           android:id="@+id/photoGalary"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:columnWidth="280dp"
+           android:gravity="center"
+           android:horizontalSpacing="2dp"
+           android:numColumns="2"
+           android:padding="2dp"
+           android:stretchMode="columnWidth"
+           android:verticalSpacing="2dp">
 
-        </GridView>
-    </android.support.v7.widget.RecyclerView>-->
+       </GridView>
+   </android.support.v7.widget.RecyclerView>-->
 
-
-    <GridView
-        android:id="@+id/photoGalary"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:columnWidth="280dp"
-        android:gravity="center"
-        android:horizontalSpacing="2dp"
-        android:numColumns="2"
-        android:padding="2dp"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="2dp"/>
     <ImageView
         android:id="@+id/targetimage"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/btn_to_gallery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Confirm"
+        app:layout_constraintTop_toBottomOf="@+id/targetimage">
+    </Button>
 
 </android.support.constraint.ConstraintLayout>

@@ -21,6 +21,11 @@
     <style name="AppTheme.Settings">
         <item name="android:layout_marginTop">20dp</item>
     </style>
+
+    <style name="MaterialDialogSheetAnimation">
+        <item name="android:windowEnterAnimation">@anim/popup_show</item>
+        <item name="android:windowExitAnimation">@anim/popup_hide</item>
+    </style>
     <!--https://stackoverflow.com/questions/5105126/android-activity-switch-direction-->
 
 </resources>
