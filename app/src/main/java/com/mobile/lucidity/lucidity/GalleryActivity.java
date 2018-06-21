@@ -17,6 +17,11 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -30,6 +35,10 @@ public class GalleryActivity extends AppCompatActivity {
     ArrayList<Bitmap> images = new ArrayList<>();
     BitmapAdapter gridAdapter = null;
 
+    //For uploading to AWS S3 storage
+    private TransferHelper transferHelper;
+    private TransferUtility transferUtility;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +48,9 @@ public class GalleryActivity extends AppCompatActivity {
         Bitmap bmp = null;
         FloatingActionButton addImg = findViewById(R.id.add_img);
 
+        //Used to upload to AWS S3 storage
+        transferHelper = new TransferHelper();
+        transferUtility = transferHelper.getTransferUtility(this);
 
         //load the images saved in app locally
         //stackoverflow.com/questions/5694385/
@@ -53,7 +65,6 @@ public class GalleryActivity extends AppCompatActivity {
                 images.add(loadFromInternalStorage(listOfFiles[i]));
             }
         }
-
 
 
         //get the image sent by selected
@@ -74,6 +85,36 @@ public class GalleryActivity extends AppCompatActivity {
             String imgName = "File_" + Integer.toString(listOfFiles.length);
             String newUrl = saveToInternalStorage(bmp, imgName);
             listOfImages.add(new File(newUrl));
+
+            File file = new File(newUrl + "/" + imgName);
+            TransferObserver observer = transferUtility.upload("lucidity-userfiles-mobilehub-980693484", "public/user-images/"+file.getName()+".png",
+                    file);
+            observer.setTransferListener(new TransferListener() {
+
+                @Override
+                public void onStateChanged(int id, TransferState state) {
+                    if (TransferState.COMPLETED == state) {
+                        Toast.makeText(getApplicationContext(), "Upload Completed!", Toast.LENGTH_SHORT).show();
+
+                    } else if (TransferState.FAILED == state) {
+                    }
+                }
+
+                @Override
+                public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                    float percentDonef = ((float) bytesCurrent / (float) bytesTotal) * 100;
+                    int percentDone = (int) percentDonef;
+
+                    Log.d("My app","ID:" + id + "|bytesCurrent: " + bytesCurrent + "|bytesTotal: " + bytesTotal + "|" + percentDone + "%");
+                }
+
+                @Override
+                public void onError(int id, Exception ex) {
+                    ex.printStackTrace();
+                }
+
+            });
+
         }
 
         gridAdapter = new BitmapAdapter(getBaseContext(), images, listOfImages);
