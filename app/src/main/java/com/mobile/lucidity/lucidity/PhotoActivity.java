@@ -87,17 +87,36 @@ public class PhotoActivity extends AppCompatActivity {
         btn_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
-                startActivity(intent);
-
-
+                //reference: stackoverflow.com/questions/11010386
+                /*Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
                 //Convert to byte array
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 byte[] byteArray = stream.toByteArray();
 
-                Intent in1 = new Intent(PhotoActivity.this, GalleryActivity.class);
-                in1.putExtra("image",byteArray);
+                intent.putExtra("image",byteArray);
+                Toast.makeText(PhotoActivity.this, "Put bitmap inside", Toast.LENGTH_SHORT).show();
+
+                startActivity(intent);*/
+
+                try {
+                    //Write file
+                    String filename = "bitmap.png";
+                    FileOutputStream stream = getApplicationContext().openFileOutput(filename, Context.MODE_PRIVATE);
+                    bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+
+                    //Cleanup
+                    //stream.close();
+                    //bmp.recycle();
+
+                    //Pop intent
+                    Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
+                    intent.putExtra("image", filename);
+                    startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
         });
 
@@ -131,7 +150,7 @@ public class PhotoActivity extends AppCompatActivity {
             targetImage.setImageBitmap(bmp);
 
             //to know about the selected image width and height
-            Toast.makeText(PhotoActivity.this, targetImage.getDrawable().getIntrinsicWidth()+" & "+targetImage.getDrawable().getIntrinsicHeight(), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(PhotoActivity.this, targetImage.getDrawable().getIntrinsicWidth()+" & "+targetImage.getDrawable().getIntrinsicHeight(), Toast.LENGTH_SHORT).show();
         }
 
     }

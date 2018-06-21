@@ -38,13 +38,13 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                 wlmp.gravity = Gravity.BOTTOM;
 
 
-                Button btnCamera = (Button) dialogLayout.findViewById(R.id.btn_add_gallery);
-                Button btnGallery = (Button) dialogLayout.findViewById(R.id.btn_add_camera);
+                Button btnGallery = (Button) dialogLayout.findViewById(R.id.btn_add_gallery);
+                Button btnCamera = (Button) dialogLayout.findViewById(R.id.btn_add_camera);
                 Button btnStored = (Button) dialogLayout.findViewById(R.id.btn_current_gal);
                 Button btnDismiss = (Button) dialogLayout.findViewById(R.id.btn_cancel_img_dialog);
 
 
-                btnCamera.setOnClickListener(new View.OnClickListener() {
+                btnGallery.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
@@ -54,12 +54,20 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                 });
 
 
-                btnGallery.setOnClickListener(new View.OnClickListener() {
+
+                btnStored.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
                         Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
                         startActivity(intent);
+                    }
+                });
+
+                btnDismiss.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
                     }
                 });
 
