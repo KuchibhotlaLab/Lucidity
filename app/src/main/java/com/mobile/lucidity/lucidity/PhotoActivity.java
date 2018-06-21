@@ -88,34 +88,20 @@ public class PhotoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //reference: stackoverflow.com/questions/11010386
-                /*Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
-                //Convert to byte array
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                byte[] byteArray = stream.toByteArray();
-
-                intent.putExtra("image",byteArray);
-                Toast.makeText(PhotoActivity.this, "Put bitmap inside", Toast.LENGTH_SHORT).show();
-
-                startActivity(intent);*/
-
+                //Write file
+                String filename = "bitmap.png";
                 try {
-                    //Write file
-                    String filename = "bitmap.png";
+
+
                     FileOutputStream stream = getApplicationContext().openFileOutput(filename, Context.MODE_PRIVATE);
                     bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-
-                    //Cleanup
-                    //stream.close();
-                    //bmp.recycle();
-
-                    //Pop intent
-                    Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
-                    intent.putExtra("image", filename);
-                    startActivity(intent);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+                Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
+                intent.putExtra("image", filename);
+                startActivity(intent);
 
             }
         });

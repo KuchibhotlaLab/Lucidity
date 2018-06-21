@@ -8,8 +8,10 @@ import android.graphics.BitmapFactory;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -20,11 +22,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GalleryActivity extends AppCompatActivity {
     ArrayList<Bitmap> images = new ArrayList<>();
+    BitmapAdapter gridAdapter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,36 +45,19 @@ public class GalleryActivity extends AppCompatActivity {
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
         File folder = cw.getDir("imageDir", Context.MODE_PRIVATE);
         File[] listOfFiles = folder.listFiles();
+        ArrayList<File> listOfImages = new ArrayList<>();
 
         for(int i = 0; i < listOfFiles.length; i++){
             if(listOfFiles[i].isFile()) {
-                //images.add(loadFromInternalStorage(listOfFiles[i]));
+                listOfImages.add(listOfFiles[i]);
+                images.add(loadFromInternalStorage(listOfFiles[i]));
             }
         }
-
-
-
-        addImg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(getApplicationContext(), PhotoActivity.class);
-                startActivity(intent);
-            }
-        });
 
 
 
         //get the image sent by selected
         //reference: stackoverflow.com/questions/11010386
-        /*byte[] byteArray = getIntent().getByteArrayExtra("image");
-        if(byteArray != null){
-            bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-        }
-        if(bmp != null){
-            images.add(bmp);
-        }*/
-
         String filename = getIntent().getStringExtra("image");
         try {
             FileInputStream is = this.openFileInput(filename);
@@ -85,25 +72,49 @@ public class GalleryActivity extends AppCompatActivity {
             images.add(bmp);
             //save file locally
             String imgName = "File_" + Integer.toString(listOfFiles.length);
-            //saveToInternalStorage(bmp, imgName);
+            String newUrl = saveToInternalStorage(bmp, imgName);
+            listOfImages.add(new File(newUrl));
         }
 
-        BitmapAdapter gridAdapter = new BitmapAdapter(getBaseContext(), images);
+        gridAdapter = new BitmapAdapter(getBaseContext(), images, listOfImages);
         gallery.setAdapter(gridAdapter);
+        gallery.setOnItemClickListener(itemClickListener);
 
+
+
+        addImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getApplicationContext(), PhotoActivity.class);
+                startActivity(intent);
+            }
+        });
 
     }
+
+    private AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
+        public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+            ImageObject l = (ImageObject)gridAdapter.getItem(position);
+            Intent intent = new Intent(getApplicationContext(), DisplayImageActivity.class);
+            intent.putExtra("image", l.getUrl());
+            startActivity(intent);
+            //TODO: figure out why the newly added picture doesn't show up(bug can be deleted)
+        }
+    };
 
 
     public class BitmapAdapter extends BaseAdapter {
 
         private Context mContext;
         List<Bitmap> gridViewitems;
+        List<File> files;
 
-        public BitmapAdapter(Context c, List<Bitmap> gridViewitems){
+        public BitmapAdapter(Context c, List<Bitmap> gridViewitems, List<File> files){
 
             mContext = c;
-            this.gridViewitems=gridViewitems;
+            this.gridViewitems = gridViewitems;
+            this.files = files;
         }
 
         @Override
@@ -113,7 +124,9 @@ public class GalleryActivity extends AppCompatActivity {
 
         @Override
         public Object getItem(int position) {
-            return gridViewitems.get(position);
+            ImageObject io = new ImageObject(
+                    files.get(position).getName(), files.get(position).getAbsolutePath());
+            return io;
         }
 
         @Override
@@ -141,6 +154,25 @@ public class GalleryActivity extends AppCompatActivity {
         }
 
 
+    }
+
+    public class ImageObject {
+        private String title;
+        private String url;
+
+        public ImageObject(String title, String url) {
+            this.title = title;
+            this.url = url;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        @Override
+        public String toString() {
+            return title;
+        }
     }
 
 
