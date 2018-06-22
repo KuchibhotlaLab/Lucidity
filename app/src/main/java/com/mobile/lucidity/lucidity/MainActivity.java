@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Background Async Task to Get complete product details
+     * Background Async Task to get the users name
      * */
     class GetName extends AsyncTask<String, String, String> {
 
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         /**
-         * Getting product details in background thread
+         * Getting name
          * */
         protected String doInBackground(String... args) {
 
@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         /**
-         * After completing background task Dismiss the progress dialog
+         * Display name at top after completion
          * **/
         protected void onPostExecute(String file_url) {
             // dismiss the dialog once got all details
@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Background Async Task to Login User
+     * Background Async Task to Verify the caregiver password
      * */
     class VerifyCaregiver extends AsyncTask<String, String, String> {
 

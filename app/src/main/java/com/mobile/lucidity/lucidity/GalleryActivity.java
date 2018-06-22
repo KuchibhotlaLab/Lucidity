@@ -154,6 +154,7 @@ public class GalleryActivity extends AppCompatActivity {
             ImageObject l = (ImageObject)gridAdapter.getItem(position);
             Intent intent = new Intent(getApplicationContext(), DisplayImageActivity.class);
             intent.putExtra("image", l.getUrl());
+            intent.putExtra("username", username);
             startActivity(intent);
             //TODO: figure out why the newly added picture doesn't show up(bug can be deleted)
         }
