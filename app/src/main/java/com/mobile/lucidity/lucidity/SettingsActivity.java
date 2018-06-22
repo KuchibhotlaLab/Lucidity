@@ -11,10 +11,19 @@ import android.widget.Spinner;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    //Stores the username of the user
+    private String username;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        //Gets the username passed from previous activity
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            username = extras.getString("username");
+        }
 
         getWindow().getDecorView().setBackgroundColor(Color.parseColor("#E9E9E9"));
 
@@ -22,6 +31,7 @@ public class SettingsActivity extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), MedHistoryDemo.class);
+                intent.putExtra("username", username);
                 startActivity(intent);
             }
         });
@@ -30,6 +40,7 @@ public class SettingsActivity extends AppCompatActivity {
         wearable.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), AddWearableActivity.class);
+                intent.putExtra("username", username);
                 startActivity(intent);
             }
         });
@@ -38,6 +49,7 @@ public class SettingsActivity extends AppCompatActivity {
         test.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), AddTestMaterialActivity.class);
+                intent.putExtra("username", username);
                 startActivity(intent);
             }
         });

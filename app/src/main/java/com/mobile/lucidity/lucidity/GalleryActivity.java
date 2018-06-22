@@ -32,6 +32,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GalleryActivity extends AppCompatActivity {
+
+    //Stores the username of the user
+    private String username;
+
     ArrayList<Bitmap> images = new ArrayList<>();
     BitmapAdapter gridAdapter = null;
 
@@ -43,6 +47,12 @@ public class GalleryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
+
+        //Gets the username passed from previous activity
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            username = extras.getString("username");
+        }
 
         GridView gallery = findViewById(R.id.photoGalary);
         Bitmap bmp = null;
@@ -56,7 +66,11 @@ public class GalleryActivity extends AppCompatActivity {
         //stackoverflow.com/questions/5694385/
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
         File folder = cw.getDir("imageDir", Context.MODE_PRIVATE);
-        File[] listOfFiles = folder.listFiles();
+        File subfolder = new File(folder, username);
+        if(!subfolder.exists()){
+            subfolder.mkdir();
+        }
+        File[] listOfFiles = subfolder.listFiles();
         ArrayList<File> listOfImages = new ArrayList<>();
 
         for(int i = 0; i < listOfFiles.length; i++){
@@ -87,7 +101,7 @@ public class GalleryActivity extends AppCompatActivity {
             listOfImages.add(new File(newUrl));
 
             File file = new File(newUrl + "/" + imgName);
-            TransferObserver observer = transferUtility.upload("lucidity-userfiles-mobilehub-980693484", "public/user-images/"+file.getName()+".png",
+            TransferObserver observer = transferUtility.upload(TransferHelper.BUCKETNAME, "public/user-images/"+username+"/"+file.getName()+".png",
                     file);
             observer.setTransferListener(new TransferListener() {
 
@@ -128,6 +142,7 @@ public class GalleryActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent intent = new Intent(getApplicationContext(), PhotoActivity.class);
+                intent.putExtra("username", username);
                 startActivity(intent);
             }
         });
@@ -221,8 +236,10 @@ public class GalleryActivity extends AppCompatActivity {
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
         // path to /data/data/yourapp/app_data/imageDir
         File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+        File subfolder = new File(directory, username);
+
         // Create imageDir
-        File mypath=new File(directory,imgName);
+        File mypath=new File(subfolder,imgName);
 
         FileOutputStream fos = null;
         try {
@@ -238,7 +255,7 @@ public class GalleryActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-        return directory.getAbsolutePath();
+        return subfolder.getAbsolutePath();
     }
 
 

@@ -45,6 +45,8 @@ import java.util.List;
 
 public class PhotoActivity extends AppCompatActivity {
 
+    //Stores the username of the user
+    private String username;
 
     private static int RESULT_LOAD_IMAGE = 1;
     private Bitmap bmp = null;
@@ -57,6 +59,11 @@ public class PhotoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo);
 
+        //Gets the username passed from previous activity
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            username = extras.getString("username");
+        }
 
         targetImage = (ImageView)findViewById(R.id.targetimage);
 
@@ -101,6 +108,7 @@ public class PhotoActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
                 intent.putExtra("image", filename);
+                intent.putExtra("username", username);
                 startActivity(intent);
 
             }

@@ -13,10 +13,19 @@ import android.widget.Button;
 
 public class AddTestMaterialActivity extends AppCompatActivity {
 
+    //Stores the username of the user
+    private String username;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_test_material);
+
+        //Gets the username passed from previous activity
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            username = extras.getString("username");
+        }
 
         Button btn_photo = findViewById(R.id.add_photo);
         btn_photo.setOnClickListener(new View.OnClickListener() {
@@ -49,6 +58,7 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                     public void onClick(View v) {
 
                         Intent intent = new Intent(getApplicationContext(), PhotoActivity.class);
+                        intent.putExtra("username", username);
                         startActivity(intent);
                     }
                 });
@@ -60,6 +70,7 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                     public void onClick(View v) {
 
                         Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
+                        intent.putExtra("username", username);
                         startActivity(intent);
                     }
                 });

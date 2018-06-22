@@ -19,6 +19,11 @@ import java.util.UUID;
 
 public class TransferHelper {
 
+    //Constant values for AWS S3 storage
+    public static final String POOLID = "us-east-1:1c6078d6-e99e-47da-aad9-d513ff9ee327";
+    public static final String BUCKETNAME = "lucidity-userfiles-mobilehub-980693484";
+    public static final String REGION = "us-east-1";
+
     private AmazonS3Client sS3Client;
     private CognitoCachingCredentialsProvider sCredProvider;
     private TransferUtility sTransferUtility;
@@ -34,8 +39,8 @@ public class TransferHelper {
         if (sCredProvider == null) {
             sCredProvider = new CognitoCachingCredentialsProvider(
                     context.getApplicationContext(),
-                    "us-east-1:1c6078d6-e99e-47da-aad9-d513ff9ee327",
-                    Regions.fromName("us-east-1"));
+                    POOLID,
+                    Regions.fromName(REGION));
         }
         return sCredProvider;
     }
@@ -50,7 +55,7 @@ public class TransferHelper {
     public AmazonS3Client getS3Client(Context context) {
         if (sS3Client == null) {
             sS3Client = new AmazonS3Client(getCredProvider(context.getApplicationContext()));
-            sS3Client.setRegion(Region.getRegion(Regions.fromName("us-east-1")));
+            sS3Client.setRegion(Region.getRegion(Regions.fromName(REGION)));
         }
         return sS3Client;
     }
@@ -67,7 +72,7 @@ public class TransferHelper {
             sTransferUtility = TransferUtility.builder()
                     .context(context.getApplicationContext())
                     .s3Client(getS3Client(context.getApplicationContext()))
-                    .defaultBucket("lucidity-userfiles-mobilehub-980693484")
+                    .defaultBucket(BUCKETNAME)
                     .build();
         }
 
