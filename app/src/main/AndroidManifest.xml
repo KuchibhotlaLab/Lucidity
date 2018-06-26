@@ -48,7 +48,7 @@
         <activity android:name=".AddWearableFormActivity" />
         <activity android:name=".AddTestMaterialActivity" />
         <activity android:name=".PhotoActivity" />
-        <activity android:name=".GalleryActivity" />
+        <activity android:name=".GalleryActivity"/>
         <!-- android:theme="@style/MaterialDialogSheetAnimation" -->
         <activity android:name=".DisplayImageActivity"></activity>
         <service android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService" android:enabled="true" />

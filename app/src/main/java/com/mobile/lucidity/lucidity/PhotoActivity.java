@@ -50,9 +50,9 @@ public class PhotoActivity extends AppCompatActivity {
 
     private static int RESULT_LOAD_IMAGE = 1;
     private Bitmap bmp = null;
+    private String imageName;
     ImageView targetImage;
     //reference: stackoverflow.com/questions/13023788
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,20 +96,22 @@ public class PhotoActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //reference: stackoverflow.com/questions/11010386
                 //Write file
-                String filename = "bitmap.png";
                 try {
 
 
-                    FileOutputStream stream = getApplicationContext().openFileOutput(filename, Context.MODE_PRIVATE);
+                    FileOutputStream stream = getApplicationContext().openFileOutput(imageName, Context.MODE_PRIVATE);
                     bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
                 Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
-                intent.putExtra("image", filename);
+                intent.putExtra("image", imageName);
                 intent.putExtra("username", username);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                //Close Page
+                finish();
 
             }
         });
@@ -131,6 +133,8 @@ public class PhotoActivity extends AppCompatActivity {
 
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
+            File imageFile = new File(picturePath);
+            imageName = imageFile.getName();
             cursor.close();
 
             try {

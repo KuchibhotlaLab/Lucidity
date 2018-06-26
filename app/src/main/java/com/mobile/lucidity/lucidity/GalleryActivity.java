@@ -95,13 +95,27 @@ public class GalleryActivity extends AppCompatActivity {
         if(bmp != null){
             //display file on this page
             images.add(bmp);
+
+            //Don't overwrite existing images with the same name
+            File fullpath = new File(subfolder,filename);
+            int count = 1;
+            while(fullpath.isFile()) {
+                String extension = filename.substring(filename.lastIndexOf("."));
+                String tempName = filename.substring(0, filename.lastIndexOf("."));
+                if (tempName.contains("(" + (count - 1) + ")")) {
+                    tempName = tempName.substring(0, tempName.lastIndexOf("("));
+                }
+                filename = tempName + "(" + count + ")" + extension;
+                fullpath = new File(subfolder, filename);
+                count++;
+            }
             //save file locally
-            String imgName = "File_" + Integer.toString(listOfFiles.length);
-            String newUrl = saveToInternalStorage(bmp, imgName);
+            String newUrl = saveToInternalStorage(bmp, filename);
             listOfImages.add(new File(newUrl));
 
-            File file = new File(newUrl + "/" + imgName);
-            TransferObserver observer = transferUtility.upload(TransferHelper.BUCKETNAME, "public/user-images/"+username+"/"+file.getName()+".png",
+            //Save file on AWS S3 storage
+            File file = new File(newUrl + "/" + filename);
+            TransferObserver observer = transferUtility.upload(TransferHelper.BUCKETNAME, "public/user-images/"+username+"/"+file.getName(),
                     file);
             observer.setTransferListener(new TransferListener() {
 

@@ -66,8 +66,6 @@ public class DisplayImageActivity extends AppCompatActivity {
             }
         });
 
-
-
         Button btnDelete = findViewById(R.id.delete);
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,6 +74,10 @@ public class DisplayImageActivity extends AppCompatActivity {
                 //Delete the file in AWS S3 storage
                 DeleteS3 deleteS3 = new DeleteS3(f.getName());
                 deleteS3.execute();
+                Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
+                intent.putExtra("username", username);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 finish();
             }
         });
@@ -102,7 +104,7 @@ public class DisplayImageActivity extends AppCompatActivity {
 
             //delete from AWS S3 storage
             try {
-                s3.deleteObject(new DeleteObjectRequest(TransferHelper.BUCKETNAME, "public/user-images/"+username+"/" + fileName+".png"));
+                s3.deleteObject(new DeleteObjectRequest(TransferHelper.BUCKETNAME, "public/user-images/"+username+"/" + fileName));
             }
             catch(AmazonServiceException e) {
                 // The call was transmitted successfully, but Amazon S3 couldn't process
