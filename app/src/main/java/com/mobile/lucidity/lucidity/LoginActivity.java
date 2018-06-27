@@ -167,7 +167,8 @@ public class LoginActivity extends AppCompatActivity {
                     // successfully found user and verified password
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 
-                    //Pass username through to other activities
+                    //Pass username with correct case through to other activities
+                    username = msg;
                     intent.putExtra("username", username);
 
                     startActivity(intent);

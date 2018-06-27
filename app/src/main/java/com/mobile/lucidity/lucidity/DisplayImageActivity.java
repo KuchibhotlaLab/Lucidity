@@ -81,8 +81,6 @@ public class DisplayImageActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-
     }
 
     /**

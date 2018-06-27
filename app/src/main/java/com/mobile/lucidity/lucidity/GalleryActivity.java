@@ -102,7 +102,7 @@ public class GalleryActivity extends AppCompatActivity {
             while(fullpath.isFile()) {
                 String extension = filename.substring(filename.lastIndexOf("."));
                 String tempName = filename.substring(0, filename.lastIndexOf("."));
-                if (tempName.contains("(" + (count - 1) + ")")) {
+                if (tempName.endsWith("(" + (count - 1) + ")")) {
                     tempName = tempName.substring(0, tempName.lastIndexOf("("));
                 }
                 filename = tempName + "(" + count + ")" + extension;
@@ -111,12 +111,12 @@ public class GalleryActivity extends AppCompatActivity {
             }
             //save file locally
             String newUrl = saveToInternalStorage(bmp, filename);
-            listOfImages.add(new File(newUrl));
+            File newFile = new File(newUrl + "/" + filename);
+            listOfImages.add(newFile);
 
             //Save file on AWS S3 storage
-            File file = new File(newUrl + "/" + filename);
-            TransferObserver observer = transferUtility.upload(TransferHelper.BUCKETNAME, "public/user-images/"+username+"/"+file.getName(),
-                    file);
+            TransferObserver observer = transferUtility.upload(TransferHelper.BUCKETNAME, "public/user-images/"+username+"/"+newFile.getName(),
+                    newFile);
             observer.setTransferListener(new TransferListener() {
 
                 @Override
