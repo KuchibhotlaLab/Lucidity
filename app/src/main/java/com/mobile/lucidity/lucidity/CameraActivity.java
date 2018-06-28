@@ -1,9 +1,9 @@
 package com.mobile.lucidity.lucidity;
 
-import android.app.Activity;
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,46 +11,35 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.BaseAdapter;
-import android.widget.Toast;
 
-
-import com.bumptech.glide.Glide;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileDescriptor;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-public class PhotoActivity extends AppCompatActivity {
+public class CameraActivity extends AppCompatActivity {
 
     //Stores the username of the user
     private String username;
 
-    private static int RESULT_LOAD_IMAGE = 1;
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int MY_PERMISSIONS_REQUEST_CAMERA = 2;
+    File photo = null;
     private Bitmap bmp = null;
     private String imageName;
+    private String timeS;
     ImageView targetImage;
+    private Uri uri;
     //reference: stackoverflow.com/questions/13023788
 
     @Override
@@ -66,28 +55,17 @@ public class PhotoActivity extends AppCompatActivity {
 
         targetImage = (ImageView)findViewById(R.id.targetimage);
 
-        //call intent to get image from gallery
-        Intent i = new Intent(
-                Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        //Check for permission to use camera
+        if (ContextCompat.checkSelfPermission(CameraActivity.this,
+                Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
 
-        startActivityForResult(i, RESULT_LOAD_IMAGE);
-
-
-        /*FloatingActionButton loadImg = findViewById(R.id.loadimage);
-        loadImg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //call intent to get image from gallery
-                Intent i = new Intent(
-                        Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-                startActivityForResult(i, RESULT_LOAD_IMAGE);
-            }
-        });*/
-
+            ActivityCompat.requestPermissions(CameraActivity.this,
+                    new String[]{Manifest.permission.CAMERA},
+                    MY_PERMISSIONS_REQUEST_CAMERA);
+        } else {
+            takephoto();
+        }
 
         Button btn_confirm = findViewById(R.id.btn_to_gallery);
         btn_confirm.setOnClickListener(new View.OnClickListener() {
@@ -96,14 +74,13 @@ public class PhotoActivity extends AppCompatActivity {
                 //reference: stackoverflow.com/questions/11010386
                 //Write file
                 try {
-
-
                     FileOutputStream stream = getApplicationContext().openFileOutput(imageName, Context.MODE_PRIVATE);
                     bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
+                //Go to gallery and add the image
                 Intent intent = new Intent(getApplicationContext(), GalleryActivity.class);
                 intent.putExtra("image", imageName);
                 intent.putExtra("username", username);
@@ -114,40 +91,59 @@ public class PhotoActivity extends AppCompatActivity {
 
             }
         });
-
-
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_CAMERA: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    takephoto();
+                } else {
+                }
+                return;
+            }
+            // other 'case' lines to check for other
+            // permissions this app might request.
+        }
+    }
+
+    // Make a file for the camera to put the image in, then invoke the camera app
+    private void takephoto(){
+        timeS = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File directory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);;
+        try {
+            photo = File.createTempFile(timeS, ".jpg", directory);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        uri = FileProvider.getUriForFile(CameraActivity.this, BuildConfig.APPLICATION_ID + ".provider", photo);
+
+        Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        i.putExtra(MediaStore. EXTRA_OUTPUT,
+                uri);
+        startActivityForResult(i, REQUEST_IMAGE_CAPTURE);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-            Uri selectedImage = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
-
-            Cursor cursor = getContentResolver().query(selectedImage,
-                    filePathColumn, null, null, null);
-            cursor.moveToFirst();
-
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            File imageFile = new File(picturePath);
-            imageName = imageFile.getName();
-            cursor.close();
-
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && null != data) {
+            //Get bitmap from image saved from camera
             try {
-                //this is the single image gotten from gallery
-                bmp = getBitmapFromUri(selectedImage);
+                bmp = getBitmapFromUri(uri);
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-
+            //delete temperorary photo file
+            photo.delete();
             targetImage.setImageBitmap(bmp);
-
-            //to know about the selected image width and height
-            //Toast.makeText(PhotoActivity.this, targetImage.getDrawable().getIntrinsicWidth()+" & "+targetImage.getDrawable().getIntrinsicHeight(), Toast.LENGTH_SHORT).show();
+            imageName = timeS + ".jpg";
         }
 
     }
@@ -160,8 +156,4 @@ public class PhotoActivity extends AppCompatActivity {
         parcelFileDescriptor.close();
         return image;
     }
-
-    //https://stackoverflow.com/questions/13023788/how-to-load-an-image-in-image-view-from-gallery
-    //source of reference
-
 }

@@ -63,7 +63,15 @@ public class AddTestMaterialActivity extends AppCompatActivity {
                     }
                 });
 
+                btnCamera.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
+                        Intent intent = new Intent(getApplicationContext(), CameraActivity.class);
+                        intent.putExtra("username", username);
+                        startActivity(intent);
+                    }
+                });
 
                 btnStored.setOnClickListener(new View.OnClickListener() {
                     @Override
