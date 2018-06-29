@@ -88,7 +88,7 @@
         android:fontFamily="@font/ostrich_sans_rounded_medium"
         android:text="TextView"
         android:textAlignment="center"
-        android:textColor="@color/colorWhite"
+        android:textColor="#4b4b4b"
         android:textSize="48sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
